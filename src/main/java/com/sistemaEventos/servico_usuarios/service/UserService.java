@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Fornece a lógica de negócio principal para o gerenciamento de Usuários (User).
@@ -92,7 +93,7 @@ public class UserService {
 
         //Converter DTO para Entidade
         User user = new User();
-        user.setId(dto.id());
+        user.setId(UUID.randomUUID().toString());
         user.setCpf(dto.cpf());
         user.setFullname(dto.fullname());
         user.setEmail(dto.email());
