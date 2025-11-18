@@ -72,10 +72,10 @@ public class UserService {
      * @return Uma Lista de objetos User.
      * @throws AccessDeniedException se o solicitante não for um ADMIN.
      */
-    public List<User> getUsers(String requesterRoles) {
+        public List<User> getAllUsers(String requesterRoles) {
         authorizationHelper.checkIsAdmin(requesterRoles);
 
-        return userRepository.findAllActiveUsers();
+        return userRepository.findAllActive();
     }
 
     /**

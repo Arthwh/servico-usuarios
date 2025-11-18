@@ -78,5 +78,5 @@ public interface UserRepository extends JpaRepository<User, String> { // JpaRepo
      * @return Uma {@link List} de {@link User} ativos.
      */
     @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL")
-    List<User> findAllActiveUsers();
+    List<User> findAllActive();
 }

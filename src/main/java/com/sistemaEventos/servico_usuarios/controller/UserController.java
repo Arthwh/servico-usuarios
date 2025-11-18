@@ -7,6 +7,7 @@ import com.sistemaEventos.servico_usuarios.model.User;
 import com.sistemaEventos.servico_usuarios.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getUsers(@RequestHeader("X-User-Roles") String requesterRoles) {
 
-        List<User> users = userService.getUsers(requesterRoles);
+        List<User> users = userService.getAllUsers(requesterRoles);
         List<UserResponseDTO> response = new ArrayList<>();
         for (User user : users) {
             response.add(new UserResponseDTO(user));

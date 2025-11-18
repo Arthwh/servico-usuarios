@@ -29,8 +29,7 @@ import java.util.Set;
 
 public class User {
     /**
-     * O identificador único (UUID) do usuário, fornecido externamente
-     * (ex: via DTO no momento da criação).
+     * O identificador único (UUID) do usuário.
      */
     @Id
     @Column(name = "id", nullable = false, updatable = false, unique = true)

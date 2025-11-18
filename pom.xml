@@ -12,7 +12,7 @@
 	<artifactId>servico-usuarios</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>servico-usuarios</name>
-	<description>Serviço de usuários do sistema de eventos utilizando microsserviços. </description>
+	<description>Serviço de usuários do sistema de eventos utilizando microserviços. </description>
 	<url/>
 	<licenses>
 		<license/>
