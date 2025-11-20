@@ -34,6 +34,31 @@ public class UserController {
     private UserService userService;
 
     /**
+     * Retorna o usuário pelo "X-User-Id" contigo no token JWT e no Header da requisição.
+     * O acesso é permitido apenas ao próprio usuário (dono) ou a um administrador.
+     *
+     * @param requesterId O ID (UUID) do usuário que está fazendo a solicitação (do header).
+     * @param requesterRoles As roles do usuário que está fazendo a solicitação (do header).
+     * @return Um {@link ResponseEntity} com status {@code 200 OK} e o {@link UserResponseDTO} do
+     * usuário encontrado.
+     * @throws UserNotFoundException (Tratado pelo GlobalExceptionHandler)
+     * se o usuário não for encontrado.
+     * @throws AccessDeniedException (Tratado pelo GlobalExceptionHandler) se o solicitante não for o
+     * dono nem um ADMIN.
+     */
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getUserByToken(
+            @RequestHeader("X-User-Id") String requesterId,
+            @RequestHeader("X-User-Roles") String requesterRoles
+    ){
+        System.out.println(requesterId);
+        User user = userService.getUserById(requesterId, requesterId, requesterRoles);
+        UserResponseDTO response = new UserResponseDTO(user);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    };
+
+    /**
      * Retorna uma lista de todos os usuários ativos do sistema.
      * Esta é uma operação restrita a administradores.
      *
@@ -70,7 +95,10 @@ public class UserController {
      * dono nem um ADMIN.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable String id, @RequestHeader("X-User-Id") String requesterId, @RequestHeader("X-User-Roles") String requesterRoles) {
+    public ResponseEntity<UserResponseDTO> getUserById(
+            @PathVariable String id,
+            @RequestHeader("X-User-Id") String requesterId,
+            @RequestHeader("X-User-Roles") String requesterRoles) {
         User user = userService.getUserById(id, requesterId, requesterRoles);
         UserResponseDTO response = new UserResponseDTO(user);
 
@@ -113,7 +141,11 @@ public class UserController {
      * dono nem um ADMIN.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable String id, @RequestBody UserUpdateDTO dto, @RequestHeader("X-User-Id") String requesterId, @RequestHeader("X-User-Roles") String requesterRoles)  {
+    public ResponseEntity<UserResponseDTO> updateUser(
+            @PathVariable String id,
+            @RequestBody UserUpdateDTO dto,
+            @RequestHeader("X-User-Id") String requesterId,
+            @RequestHeader("X-User-Roles") String requesterRoles)  {
         User user = userService.updateUser(id, dto, requesterId, requesterRoles);
 
         UserResponseDTO response = new UserResponseDTO(user);
@@ -134,7 +166,10 @@ public class UserController {
      * dono nem um ADMIN.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String id, @RequestHeader("X-User-Id") String requesterId, @RequestHeader("X-User-Roles") String requesterRoles) {
+    public ResponseEntity<Void> deleteUser(
+            @PathVariable String id,
+            @RequestHeader("X-User-Id") String requesterId,
+            @RequestHeader("X-User-Roles") String requesterRoles) {
         userService.deleteUser(id, requesterId, requesterRoles);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
