@@ -218,4 +218,20 @@ public class UserService {
             throw new EmailAlreadyExistsException("O e-mail já está cadastrado.");
         }
     }
+
+    public User findByCpf(String cpfString) {
+        String cpfLimpo = cpfString.replaceAll("[^0-9]", "");
+        
+        try {
+             // Cria o objeto CPF (isso valida o formato também)
+             CPF cpfObj = new CPF(cpfLimpo);
+             
+             return userRepository.findActiveUserByCpf(cpfObj)
+                 .orElseThrow(() -> new UserNotFoundException("CPF não encontrado: " + cpfString));
+                 
+        } catch (Exception e) {
+             // Se o CPF for inválido ou não existir
+             throw new UserNotFoundException("CPF Inválido ou não encontrado");
+        }
+    }
 }

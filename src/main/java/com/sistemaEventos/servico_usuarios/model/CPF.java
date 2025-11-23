@@ -134,5 +134,6 @@ public class CPF {
 
         // Verifica se os dígitos calculados conferem com os dígitos informados.
         return (dig10 == cpf.charAt(9)) && (dig11 == cpf.charAt(10));
+        
     }
 }

@@ -139,4 +139,15 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    /**
+     * Busca um usuário pelo CPF.
+     * Usado pelo App Mobile para localizar participantes na portaria.
+     */
+    @GetMapping("/search")
+    public ResponseEntity<UserResponseDTO> findUserByCpf(@RequestParam("cpf") String cpf) {
+        // O service já tem o método findByCpf que criamos antes
+        User user = userService.findByCpf(cpf);
+        return ResponseEntity.ok(new UserResponseDTO(user));
+    }
 }
