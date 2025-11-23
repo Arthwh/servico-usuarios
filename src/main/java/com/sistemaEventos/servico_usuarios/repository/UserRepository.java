@@ -80,14 +80,4 @@ public interface UserRepository extends JpaRepository<User, String> { // JpaRepo
      */
     @Query("SELECT u FROM User u WHERE u.deletedAt IS NULL")
     List<User> findAllActive();
-
-    /**
-     * Busca um usuário *ativo* (deleted_at = false) pelo seu CPF em formato String.
-     *
-     * @param cpf O CPF do usuário em formato String (apenas números).
-     * @return Um {@link Optional} contendo o {@link User} se encontrado e ativo,
-     * ou {@link Optional#empty()} caso contrário.
-     */
-    @Query("SELECT u FROM User u WHERE u.cpf = ?1 AND u.deletedAt IS NULL")
-    Optional<User> findActiveUserByCpf(String cpf);
 }

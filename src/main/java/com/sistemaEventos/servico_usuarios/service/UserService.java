@@ -45,15 +45,15 @@ public class UserService {
      * Busca um usuário ativo específico pelo ID, aplicando verificação de permissão.
      * O solicitante deve ser o próprio usuário (dono) ou um ADMIN.
      *
-     * @param targetId O ID (UUID) do usuário a ser buscado.
-     * @param requesterId O ID (UUID) do usuário que está fazendo a solicitação (do token).
+     * @param targetId       O ID (UUID) do usuário a ser buscado.
+     * @param requesterId    O ID (UUID) do usuário que está fazendo a solicitação (do token).
      * @param requesterRoles As roles do usuário que está fazendo a solicitação (do token).
      * @return O objeto User encontrado.
      * @throws UserNotFoundException se o usuário com o {@code targetId} não for encontrado.
      * @throws AccessDeniedException (via AuthorizationHelper) se o {@code requesterId} não for o dono
-     * do recurso nem um ADMIN.
+     *                               do recurso nem um ADMIN.
      */
-    public User getUserById(String targetId, String requesterId, String requesterRoles){
+    public User getUserById(String targetId, String requesterId, String requesterRoles) {
         authorizationHelper.checkOwnershipOrAdmin(targetId, requesterId, requesterRoles);
 
         Optional<User> userOptional = userRepository.findActiveUserById(targetId);
@@ -72,7 +72,7 @@ public class UserService {
      * @return Uma Lista de objetos User.
      * @throws AccessDeniedException se o solicitante não for um ADMIN.
      */
-        public List<User> getAllUsers(String requesterRoles) {
+    public List<User> getAllUsers(String requesterRoles) {
         authorizationHelper.checkIsAdmin(requesterRoles);
 
         return userRepository.findAllActive();
@@ -84,9 +84,9 @@ public class UserService {
      *
      * @param dto O Data Transfer Object (DTO) contendo os dados do novo usuário.
      * @return A entidade User salva no banco de dados.
-     * @throws CpfAlreadyExistsException se o CPF já estiver em uso.
+     * @throws CpfAlreadyExistsException   se o CPF já estiver em uso.
      * @throws EmailAlreadyExistsException se o e-mail já estiver em uso.
-     * @throws RuntimeException se a "ROLE_USER" padrão não for encontrada no banco.
+     * @throws RuntimeException            se a "ROLE_USER" padrão não for encontrada no banco.
      */
     public User createUser(UserCreateDTO dto) {
         validateUserExists(dto.cpf(), dto.email());
@@ -117,9 +117,9 @@ public class UserService {
      *
      * @param dto O Data Transfer Object (DTO) contendo os dados sincronizados.
      * @return A entidade User salva no banco de dados.
-     * @throws CpfAlreadyExistsException se o CPF já estiver em uso.
+     * @throws CpfAlreadyExistsException   se o CPF já estiver em uso.
      * @throws EmailAlreadyExistsException se o e-mail já estiver em uso.
-     * @throws RuntimeException se a "ROLE_USER" padrão não for encontrada no banco.
+     * @throws RuntimeException            se a "ROLE_USER" padrão não for encontrada no banco.
      */
     public User createSyncUser(UserSyncDTO dto) {
         validateUserExists(dto.cpf(), dto.email());
@@ -150,14 +150,14 @@ public class UserService {
      * Atualiza os dados (nome completo, data de nascimento) de um usuário existente.
      * O solicitante deve ser o próprio usuário (dono) ou um ADMIN.
      *
-     * @param targetId O ID (UUID) do usuário a ser atualizado.
-     * @param dto O DTO com os dados (parciais) a serem alterados.
-     * @param requesterId O ID (UUID) do usuário que está fazendo a solicitação.
+     * @param targetId       O ID (UUID) do usuário a ser atualizado.
+     * @param dto            O DTO com os dados (parciais) a serem alterados.
+     * @param requesterId    O ID (UUID) do usuário que está fazendo a solicitação.
      * @param requesterRoles As roles do usuário que está fazendo a solicitação.
      * @return A entidade User atualizada e salva.
      * @throws UserNotFoundException se o usuário com o {@code targetId} não for encontrado.
      * @throws AccessDeniedException (via AuthorizationHelper) se o {@code requesterId} não for o dono
-     * do recurso nem um ADMIN.
+     *                               do recurso nem um ADMIN.
      */
     public User updateUser(String targetId, UserUpdateDTO dto, String requesterId, String requesterRoles) {
         authorizationHelper.checkOwnershipOrAdmin(targetId, requesterId, requesterRoles);
@@ -184,12 +184,12 @@ public class UserService {
      * Exclui (softdelete) um usuário do banco de dados.
      * O solicitante deve ser o próprio usuário (dono) ou um ADMIN.
      *
-     * @param targetId O ID (UUID) do usuário a ser excluído.
-     * @param requesterId O ID (UUID) do usuário que está fazendo a solicitação.
+     * @param targetId       O ID (UUID) do usuário a ser excluído.
+     * @param requesterId    O ID (UUID) do usuário que está fazendo a solicitação.
      * @param requesterRoles As roles do usuário que está fazendo a solicitação.
      * @throws UserNotFoundException se o usuário com o {@code targetId} não for encontrado.
      * @throws AccessDeniedException (via AuthorizationHelper) se o {@code requesterId} não for o dono
-     * do recurso nem um ADMIN.
+     *                               do recurso nem um ADMIN.
      */
     public void deleteUser(String targetId, String requesterId, String requesterRoles) {
         authorizationHelper.checkOwnershipOrAdmin(targetId, requesterId, requesterRoles);
@@ -204,13 +204,13 @@ public class UserService {
     /**
      * Validador interno que verifica se o CPF ou E-mail já existem.
      *
-     * @param cpf O CPF a ser verificado.
+     * @param cpf   O CPF a ser verificado.
      * @param email O E-mail a ser verificado.
-     * @throws CpfAlreadyExistsException se o CPF já estiver em uso.
+     * @throws CpfAlreadyExistsException   se o CPF já estiver em uso.
      * @throws EmailAlreadyExistsException se o e-mail já estiver em uso.
      */
     private void validateUserExists(CPF cpf, String email) {
-        if (userRepository.existsByCpf(cpf)){
+        if (userRepository.existsByCpf(cpf)) {
             throw new CpfAlreadyExistsException("O CPF já está cadastrado.");
         }
 
@@ -221,17 +221,11 @@ public class UserService {
 
     public User findByCpf(String cpfString) {
         String cpfLimpo = cpfString.replaceAll("[^0-9]", "");
-        
-        try {
-             // Cria o objeto CPF (isso valida o formato também)
-             CPF cpfObj = new CPF(cpfLimpo);
-             
-             return userRepository.findActiveUserByCpf(cpfObj)
-                 .orElseThrow(() -> new UserNotFoundException("CPF não encontrado: " + cpfString));
-                 
-        } catch (Exception e) {
-             // Se o CPF for inválido ou não existir
-             throw new UserNotFoundException("CPF Inválido ou não encontrado");
-        }
+        // Cria o objeto CPF (isso valida o formato também)
+        CPF cpfObj = new CPF(cpfLimpo);
+
+        return userRepository.findActiveUserByCpf(cpfObj)
+                .orElseThrow(() -> new UserNotFoundException("CPF não encontrado: " + cpfString));
+
     }
 }
