@@ -1,6 +1,10 @@
 package com.sistemaEventos.servico_usuarios.service;
 
+import com.sistemaEventos.servico_usuarios.dto.ResetPasswordDTO;
+import com.sistemaEventos.servico_usuarios.dto.SendRecoveryCodeDTO;
 import com.sistemaEventos.servico_usuarios.dto.UserLoginDTO;
+import com.sistemaEventos.servico_usuarios.dto.VerifyRecoveryCodeDTO;
+import com.sistemaEventos.servico_usuarios.exception.UserNotFoundException;
 import com.sistemaEventos.servico_usuarios.model.User;
 import com.sistemaEventos.servico_usuarios.repository.UserRepository;
 import com.sistemaEventos.servico_usuarios.config.JwtService;
@@ -8,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * Serviço responsável pela lógica de autenticação de usuários.
@@ -17,6 +23,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AuthService {
+    String MOCKED_RECOVERY_CODE = "1234";
+    String MOCKED_RECOVERY_TOKEN = UUID.randomUUID().toString();
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -44,5 +52,31 @@ public class AuthService {
         }
 
         throw new BadCredentialsException("Email ou senha inválidos");
+    }
+
+    public void sendPasswordRecoveryCode(SendRecoveryCodeDTO dto){
+        User user = userRepository.findActiveUserByEmail(dto.email())
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado com esse e-mail."));
+
+        String code = MOCKED_RECOVERY_CODE;
+        //Salva código no db
+    }
+
+    public String verifyRecoveryCode(VerifyRecoveryCodeDTO dto){
+        //Valida email e token são válidos
+
+        return MOCKED_RECOVERY_TOKEN;
+    }
+
+    public void resetPassword(ResetPasswordDTO dto){
+        if (!dto.token().equals(MOCKED_RECOVERY_TOKEN)){
+            throw new IllegalArgumentException("O token não é válido.");
+        }
+
+        User user = userRepository.findActiveUserByEmail(dto.email())
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado com esse e-mail."));
+
+        user.setPassword(passwordEncoder.encode(dto.newPassword()));
+        userRepository.save(user);
     }
 }

@@ -1,8 +1,6 @@
 package com.sistemaEventos.servico_usuarios.controller;
 
-import com.sistemaEventos.servico_usuarios.dto.UserCreateDTO;
-import com.sistemaEventos.servico_usuarios.dto.UserLoginDTO;
-import com.sistemaEventos.servico_usuarios.dto.UserResponseDTO;
+import com.sistemaEventos.servico_usuarios.dto.*;
 import com.sistemaEventos.servico_usuarios.model.User;
 import com.sistemaEventos.servico_usuarios.service.AuthService;
 import com.sistemaEventos.servico_usuarios.service.UserService;
@@ -67,5 +65,26 @@ public class AuthController {
         String token = authService.login(dto);
         // Retorna o token JWT no corpo da resposta
         return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/password-recovery")
+    public ResponseEntity<Void> password_recovery(@RequestBody SendRecoveryCodeDTO dto) {
+        authService.sendPasswordRecoveryCode(dto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/validate-recovery-code")
+    public ResponseEntity<String> validate_recovery_code(@RequestBody VerifyRecoveryCodeDTO dto) {
+        String token = authService.verifyRecoveryCode(dto);
+
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> reset_password(@RequestBody ResetPasswordDTO dto) {
+        authService.resetPassword(dto);
+
+        return ResponseEntity.ok().build();
     }
 }

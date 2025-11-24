@@ -5,7 +5,6 @@ import com.sistemaEventos.servico_usuarios.model.User;
 import java.time.Instant;
 
 public record UserSyncDTO(
-        String id,
         CPF cpf,
         String fullname,
         String email,
@@ -14,7 +13,6 @@ public record UserSyncDTO(
 ) {
     public UserSyncDTO(User user) {
         this(
-                user.getId(),
                 user.getCpf(),
                 user.getFullname(),
                 user.getEmail(),

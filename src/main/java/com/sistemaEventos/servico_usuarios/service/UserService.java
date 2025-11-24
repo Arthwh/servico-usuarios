@@ -126,7 +126,7 @@ public class UserService {
 
         //Converter DTO para Entidade
         User user = new User();
-        user.setId(java.util.UUID.randomUUID().toString());
+        user.setId(UUID.randomUUID().toString());
         user.setCpf(dto.cpf());
         user.setFullname(dto.fullname());
         user.setEmail(dto.email());
