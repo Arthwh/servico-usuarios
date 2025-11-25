@@ -140,12 +140,8 @@ public class UserService {
         user.setComplete(false);
 
         //Gera uma senha temporária
-        //String temporaryPassword = passwordEncoder.encode(String.valueOf(Instant.now().toEpochMilli()));
-        //user.setPassword(temporaryPassword);
-
-        // Defina uma senha fixa para testes
-        String senhaFixa = "123456";
-        user.setPassword(passwordEncoder.encode(senhaFixa));
+        String temporaryPassword = passwordEncoder.encode(String.valueOf(Instant.now().toEpochMilli()));
+        user.setPassword(temporaryPassword);
 
         return userRepository.save(user);
     }
